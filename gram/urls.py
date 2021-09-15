@@ -9,5 +9,6 @@ urlpatterns=[
     path('viewimage/<int:pk>/', views.viewPhoto, name="viewphoto"),
     path('likes/<int:pk>/', views.likes, name="likes"),
     path('userprofile/<int:pk>/', views.profile_view, name="userprofile"),
-
+    path("followers/<int:pk>/", views.followers, name="followers"),
+    
 ]
