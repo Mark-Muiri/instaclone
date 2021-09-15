@@ -10,7 +10,14 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
+import os
+import sys
 from pathlib import Path
+
+import cloudinary
+import cloudinary.api
+import cloudinary.uploader
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -18,6 +25,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
+
+sys.setrecursionlimit(905000)
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-_zr*jny+h8mls%r7(-(w9&0v*vx9aceq$@bpjb+dvch)%#eq2g'
@@ -38,6 +47,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'cloudinary',
+    'bootstrap4',
+    'tinymce'
 ]
 
 MIDDLEWARE = [
@@ -83,6 +95,12 @@ DATABASES = {
     }
 }
 
+cloudinary.config(
+    cloud_name='ychinga',
+    api_key='861184584993875',
+    api_secret='cKfusCJSyO2CKwERnJI0NIP3uUo',
+)
+
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -126,3 +144,4 @@ STATIC_URL = '/static/'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+

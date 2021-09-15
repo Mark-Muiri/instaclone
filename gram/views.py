@@ -9,26 +9,16 @@ from .emails import send_welcome_email
 from .forms import ImageCommentForm, NewImageForm, RegistrationForm, UpdateUserProfile
 from .models import Comment, Image, Profile, User
 
-# Create your views here.
-# def index(request):
-#     return render(request, 'registration/login.html', {})
 
 
 def home(request):
     images = Image.objects.all()
     users = User.objects.all()
-    # print(images)
+    
 
-    return render(request, "instaclone/index.html", {"images": images, "users": users})
+    return render(request, "gram/index.html", {"images": images, "users": users})
 
 
-# def homepage(request):
-#     image=Image.objects.all()
-#     print(image)
-#     # users=User.objects.all()
-#     # print(users)
-
-#     return render(request, 'instaclone/index.html', {"image":image})
 
 
 def registerUser(request):
@@ -52,9 +42,9 @@ def registerUser(request):
 def loginUser(request):
     if request.method == "POST":
         username = request.POST.get("username")
-        # print(username)
+        
         password = request.POST.get("password")
-        # print(password)
+        
 
         if username and password:
             user = authenticate(username=username, password=password)
@@ -70,7 +60,7 @@ def loginUser(request):
         else:
             messages.error(request, "Field is empty. Enter Username and Password")
 
-    title = "Instaclone.com"
+    title = "gram.com"
     return render(request, "registration/login.html", {"title": title})
 
 
@@ -93,7 +83,7 @@ def new_image(request):
 
     else:
         form = NewImageForm()
-    return render(request, "instaclone/new_image.html", {"form": form})
+    return render(request, "gram/new_image.html", {"form": form})
 
 
 def likes(request, pk):
@@ -131,7 +121,7 @@ def viewPhoto(request, pk):
         form = ImageCommentForm()
     return render(
         request,
-        "instaclone/oneimage.html",
+        "gram/oneimage.html",
         {
             "image": image,
             "form": form,
@@ -145,14 +135,14 @@ def viewPhoto(request, pk):
 def profile_view(request, pk):
     user = Profile.objects.filter(id=pk)
     images = Image.objects.filter(profile_id=pk)
-    # print(user)
+    
 
     user_followers = get_object_or_404(Profile, id=pk)
     total_followers = user_followers.total_followers()
 
     return render(
         request,
-        "instaclone/profile.html",
+        "gram/profile.html",
         {"user": user, "images": images, "total_followers": total_followers},
     )
 
@@ -174,7 +164,7 @@ def editpage(request, pk):
     else:
         form = UpdateUserProfile()
 
-    return render(request, "instaclone/editprofile.html", {"form": form, "user": user})
+    return render(request, "gram/editprofile.html", {"form": form, "user": user})
 
 
 def search_profile(request):
@@ -185,10 +175,10 @@ def search_profile(request):
 
         return render(
             request,
-            "instaclone/search.html",
+            "gram/search.html",
             {"message": message, "articles": searched_profile},
         )
 
     else:
         message = "You have not searched for any profile"
-        return render(request, "instaclone/search.html", {"message": message})
+        return render(request, "gram/search.html", {"message": message})
