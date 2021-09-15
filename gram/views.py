@@ -6,53 +6,58 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse, reverse_lazy
 
 from .emails import send_welcome_email
-from .forms import ImageCommentForm, NewImageForm, RegistrationForm, UpdateUserProfile
+from .forms import (ImageCommentForm, NewImageForm, RegistrationForm,
+                    UpdateUserProfile)
 from .models import Comment, Image, Profile, User
 
-
+# Create your views here.
+# def index(request):
+#     return render(request, 'registration/login.html', {})
 
 def home(request):
-    images = Image.objects.all()
-    users = User.objects.all()
+    images=Image.objects.all()
+    users=User.objects.all()
+    print(images)
+
+    return render(request, 'gram/index.html', {"images":images, "users":users})
+
+# def homepage(request):
+#     image=Image.objects.all()
+#     print(image)
+#     # users=User.objects.all()
+#     # print(users)
     
-
-    return render(request, "gram/index.html", {"images": images, "users": users})
-
-
-
+#     return render(request, 'gram/index.html', {"image":image})
 
 def registerUser(request):
-    form = RegistrationForm()
+    form=RegistrationForm()
     if request.method == "POST":
-        form = RegistrationForm(request.POST)
+        form=RegistrationForm(request.POST)
 
         if form.is_valid():
             form.save()
 
-            return redirect("index")
+            return redirect('index')
 
     else:
-        form = RegistrationForm()
-    title = "Register New User"
-    return render(
-        request, "registration/registration.html", {"title": title, "form": form}
-    )
-
+        form=RegistrationForm()
+    title="Register New User"
+    return render(request, 'registration/registration.html', {"title":title, "form":form})
 
 def loginUser(request):
-    if request.method == "POST":
-        username = request.POST.get("username")
-        
-        password = request.POST.get("password")
-        
+    if request.method =="POST":
+        username = request.POST.get('username')
+        # print(username)
+        password = request.POST.get('password')
+        # print(password)
 
         if username and password:
-            user = authenticate(username=username, password=password)
+            user=authenticate(username=username, password=password)
 
             if user is not None:
                 login(request, user)
 
-                return redirect("home")
+                return redirect('home')
 
             else:
                 messages.error(request, "Username or Password is incorrect")
@@ -60,125 +65,104 @@ def loginUser(request):
         else:
             messages.error(request, "Field is empty. Enter Username and Password")
 
-    title = "gram.com"
-    return render(request, "registration/login.html", {"title": title})
+    title="gram.com"
+    return render(request, 'registration/login.html', {"title":title})
 
 
 def logoutUser(request):
     logout(request)
-    return redirect("index")
-
+    return redirect('index')
 
 @login_required
 def new_image(request):
     current_user = request.user
-    if request.method == "POST":
-        form = NewImageForm(request.POST, request.FILES)
+    if request.method=="POST":
+        form=NewImageForm(request.POST, request.FILES)
         if form.is_valid():
-            image = form.save(commit=False)
-            image.profile = current_user
+            image=form.save(commit=False)
+            image.profile=current_user
             image.save()
 
-        return redirect("home")
+        return redirect('home')
 
     else:
-        form = NewImageForm()
-    return render(request, "gram/new_image.html", {"form": form})
-
+        form=NewImageForm()
+    return render(request, 'gram/new_image.html', {"form":form})
 
 def likes(request, pk):
-    imagelike = get_object_or_404(Image, id=request.POST.get("likebutton"))
+    imagelike=get_object_or_404(Image, id=request.POST.get('likebutton'))
     imagelike.likes.add(request.user)
-    return HttpResponseRedirect(reverse("viewphoto", args=[str(pk)]))
-
+    return HttpResponseRedirect(reverse('viewphoto', args=[str(pk)]))
 
 def followers(request, pk):
-    follow = get_object_or_404(Profile, id=request.POST.get("follow"))
+    follow=get_object_or_404(Profile, id=request.POST.get('follow'))
     follow.followers.add(request.user)
-    return HttpResponseRedirect(reverse("userprofile", args=[str(pk)]))
-
+    return HttpResponseRedirect(reverse('userprofile', args=[str(pk)]))
 
 @login_required
 def viewPhoto(request, pk):
-    image = Image.objects.get(id=pk)
-    form = ImageCommentForm()
-
-    all_comments = Comment.objects.all()
+    image=Image.objects.get(id=pk)  
+    form=ImageCommentForm()
+    
+    all_comments=Comment.objects.all()
     print(all_comments)
 
-    likesonimage = get_object_or_404(Image, id=pk)
-    total_likes = likesonimage.total_likes()
-
+    likesonimage=get_object_or_404(Image, id=pk)
+    total_likes=likesonimage.total_likes()
+   
     if request.method == "POST":
-        form = ImageCommentForm(request.POST)
+        form=ImageCommentForm(request.POST)
 
         if form.is_valid():
             form.save()
 
-            return HttpResponseRedirect(reverse("viewphoto", args=[str(pk)]))
+            return HttpResponseRedirect(reverse('viewphoto', args=[str(pk)]))
 
     else:
-        form = ImageCommentForm()
-    return render(
-        request,
-        "gram/oneimage.html",
-        {
-            "image": image,
-            "form": form,
-            "all_comments": all_comments,
-            "total_likes": total_likes,
-        },
-    )
-
+        form=ImageCommentForm()
+    return render(request, 'gram/oneimage.html', {"image": image, "form":form, "all_comments": all_comments,"total_likes": total_likes})
 
 @login_required
 def profile_view(request, pk):
-    user = Profile.objects.filter(id=pk)
-    images = Image.objects.filter(profile_id=pk)
+    user=Profile.objects.filter(id=pk)
+    images=Image.objects.filter(profile_id=pk)
+    # print(user)
+
+    user_followers=get_object_or_404(Profile, id=pk)
+    total_followers=user_followers.total_followers()
     
 
-    user_followers = get_object_or_404(Profile, id=pk)
-    total_followers = user_followers.total_followers()
-
-    return render(
-        request,
-        "gram/profile.html",
-        {"user": user, "images": images, "total_followers": total_followers},
-    )
-
+    return render(request, "gram/profile.html", {"user":user,"images":images, "total_followers":total_followers})
 
 @login_required
 def editpage(request, pk):
-    form = UpdateUserProfile()
-    user = Profile.objects.filter(id=pk)
+    form=UpdateUserProfile()
+    user=Profile.objects.filter(id=pk)
     print(user)
 
-    if request.method == "POST":
-        form = UpdateUserProfile(request.POST)
+    if request.method =="POST":
+        form=UpdateUserProfile(request.POST)
 
         if form.is_valid():
             form.save()
 
-            return redirect("userprofile")
+            return redirect('userprofile')
 
     else:
-        form = UpdateUserProfile()
+        form=UpdateUserProfile()
 
-    return render(request, "gram/editprofile.html", {"form": form, "user": user})
-
+    return render(request, "gram/editprofile.html", {"form":form, "user":user})
 
 def search_profile(request):
-    if "article" in request.GET and request.GET["article"]:
-        profile = request.GET.get("article")
-        searched_profile = Image.search_by_user(profile)
-        message = f"{profile}"
+    if 'article' in request.GET and request.GET['article']:
+        profile=request.GET.get('article')
+        searched_profile=Image.search_by_user(profile)
+        message=f"{profile}"
 
-        return render(
-            request,
-            "gram/search.html",
-            {"message": message, "articles": searched_profile},
-        )
+        return render(request, "gram/search.html", {"message":message, "articles":searched_profile})
 
     else:
-        message = "You have not searched for any profile"
-        return render(request, "gram/search.html", {"message": message})
+        message="You have not searched for any profile"
+        return render(request, "gram/search.html", {"message":message})
+
+

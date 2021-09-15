@@ -1,76 +1,52 @@
+
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <meta name="viewport" content="width=device-width">
     <title>Document</title>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
 </head>
-
 <body>
-    <div id="navbar">
-        <nav class="navbar fixed-top navbar-light bg-light">
-            <a class="navbar-brand" href="{% url 'home' %}" style="font-size: 28px; color: black;">Instaclone</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
-                aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <!-- Adding a search form  -->
-            <div class="col-sm-4 col-md-4 navbar-centre navbarsearch">
+  <div class="container-fluid">
+    <nav class="navbar navbar-expand-lg fixed-top navbar-light" id="navbar" style="padding: 0px; background-color: white;">
+        <div class="container-fluid">
+          <div class="navbar-header icons instalogo">
+            <a class="navbar-brand" href="{% url 'home' %}"><i class="fab fa-instagram"></i></a>
+            <a class="vl"></a>
+            <a class="navbar-brand" href="{% url 'home' %}">Instaclone</a>
+          </div>
+          <div class="searchbar">
+            <form class="navbar-form" role="search" action="{% url 'search_profile' %}" >
 
-                <form class="navbar-form" role="search" action="{% url 'search_profile' %}">
-
-                    <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Search Profile" name="article">
-                        <div class="input-group-btn">
-                            <button class="btn btn-default" type="submit"><i
-                                    class="glyphicon glyphicon-search"></i></button>
-                        </div>
-                    </div>
-
-                </form>
-            </div>
-            <div class="col-md-4 col-sm-4 navbar-right">
-                <div class="wrapper small">
-                    <button class="navbutton"><a href="{% url 'home'%}"><i class="fa fa-home"></i></a></button>
-                    <button class="navbutton"><a href="{% url 'uploadimage' %}"><i
-                                class="fa fa-plus-square"></i></a></button>
-                    <button class="navbutton"><a href="#"><i class="fa fa-heart"></i></a></button>
-                </div>
-                <div class="col-md-4 col-sm-4 navbar-right">
-                    {% if user.is_authenticated %}
-                    <ul class="dropdown">
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle btn btn-default" data-toggle="dropdown" role="button"
-                                aria-expanded="false">User
-                                <span class="caret"></span>
-                            </a>
-                            <ul class="dropdown-menu" role="menu">
-                                <li>
-                                    <a href="{% url 'userprofile' user.id %}">View Profile</a>
-                                </li>
-                                <li>
-                                    <a href="{% url 'editprofile' user.id%}">Edit Profile</a>
-                                </li>
-                                <li>
-                                    <a href="/logout">Logout</a>
-                                </li>
-                            </ul>
-                        </li>
-                    </ul>
-
-                    {% endif %}
-
-                </div>
-
-            </div>
-
-        </nav>
-    </div>
-
+              <div class="input-group">
+                <input type="text" class="form-control" placeholder="Search Users" name="image">
+                
+              </div>
+            </form>
+          </div>
+          <div class="navbar-nav icons">
+            {% if user.is_authenticated %}
+              <a class="nav-item nav-link likes" href="{% url 'home' %}"><i class="far fa-heart"></i></a>
+              <a class="nav-item nav-link explore" href="{% url 'home' %}"><i class="far fa-compass"></i></a>
+              
+              <a class="nav-item nav-link post" href="{% url 'uploadimage' %"><i class="fas fa-plus-circle"></i>Post</a>
+              <a class="nav-item nav-link profile" href="{% url 'editprofile' user.id%}"><i class="fas fa-plus-circle"></i>Edit Profile</a>
+              <a class="nav-item nav-link profile" href="{% url 'userprofile' user.id %}"><i class="fas fa-plus-circle"></i>User Profile</a>
+              
+            
+              <a class="nav-item nav-link logout" href="{% url 'logout' %}">Log Out</a>
+            {% endif %}
+          </div>
+        </div>
+      </nav>
+      </div>
 </body>
-
 </html>
+
+
+
+
+
+
+
