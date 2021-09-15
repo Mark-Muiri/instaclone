@@ -6,4 +6,6 @@ urlpatterns=[
     path('home/', views.home, name="home"),
     path('register/', views.registerUser, name="registeruser"),
     path('uploadimage/', views.new_image, name="uploadimage"),
+    path('viewimage/<int:pk>/', views.viewPhoto, name="viewphoto"),
+    
 ]
